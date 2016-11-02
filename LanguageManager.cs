@@ -4,6 +4,23 @@ using UnityEngine;
 public class LanguageManager : ScriptableObject {
 	public List<Language> languages;
 	public List<string> phrases;
+	public Language activeLanguage;
+
+	public void setActiveLanguage(string name){
+		foreach(Language language in languages){
+			if (language.name == name) {
+				activeLanguage = language;
+				return;
+			}
+		}
+	}
+
+	public string getActiveLanguagePhrase(string phraseName){
+		if (activeLanguage != null) {
+			return activeLanguage.getPhrase (phraseName);
+		} else
+			return null;
+	}
 
 	public void addLanguage(string name)
 	{

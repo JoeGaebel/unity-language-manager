@@ -21,11 +21,6 @@ public class LanguageManagerWindow : EditorWindow {
 		EditorWindow.GetWindow (typeof(LanguageManagerWindow));
 	}
 
-	void Awake(){
-		textFields = new DictionaryWithDefault<string, string> ("");
-		initializeFieldDictionary();
-	}
-
 	void onEnable(){
 		
 		if(EditorPrefs.HasKey("ObjectPath")) 
@@ -80,6 +75,7 @@ public class LanguageManagerWindow : EditorWindow {
 			if(GUILayout.Button("Create language"))
 			{
 				languageManager.addLanguage (newLanguageName);
+				languageManager.setActiveLanguage (newLanguageName);
 			}
 
 			//List Languages
@@ -91,6 +87,10 @@ public class LanguageManagerWindow : EditorWindow {
 				if(GUILayout.Button("X"))
 				{
 					languageManager.removeLanguage(language.name);
+				}
+				if(GUILayout.Button("Make active"))
+				{
+					languageManager.setActiveLanguage(language.name);
 				}
 				GUILayout.EndHorizontal();
 
@@ -106,8 +106,6 @@ public class LanguageManagerWindow : EditorWindow {
 						textFields[language.name+phrase] = EditorGUILayout.TextField(textFields[language.name+phrase]);
 						if(GUILayout.Button("Save"))
 						{
-							Debug.Log ("Value is: "+ textFields[language.name+phrase]);
-							Debug.Log ("Trying to update " + phrase + " with " + textFields[language.name+phrase]);
 							language.addPhrase(phrase, textFields[language.name+phrase]);
 						}
 						GUILayout.EndHorizontal();
@@ -115,6 +113,12 @@ public class LanguageManagerWindow : EditorWindow {
 					GUILayout.EndVertical ();
 				}
 			}
+
+			// Active Language things
+			EditorGUILayout.LabelField ("Active Language", headerStyle);
+			GUILayout.Box("", new GUILayoutOption[]{GUILayout.ExpandWidth(true), GUILayout.Height(1)});
+			EditorGUILayout.LabelField ("Current active language is: " + languageManager.activeLanguage.name);
+
 		}
 		else {
 			if (GUILayout.Button("Open Langauge Data")) 
@@ -142,7 +146,7 @@ public class LanguageManagerWindow : EditorWindow {
 	}
 
 	void initializeFieldDictionary(){
-		if (languageManager != null && textFields != null) {
+		if (textFields != null) {
 			foreach(Language language in languageManager.languages){
 				foreach(string phrase in languageManager.phrases){
 					if (language.getPhrase(phrase) != null){
