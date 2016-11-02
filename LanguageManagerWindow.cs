@@ -146,7 +146,7 @@ public class LanguageManagerWindow : EditorWindow {
 	}
 
 	void initializeFieldDictionary(){
-		if (textFields != null) {
+		if (textFields != null && languageManager != null) {
 			foreach(Language language in languageManager.languages){
 				foreach(string phrase in languageManager.phrases){
 					if (language.getPhrase(phrase) != null){
